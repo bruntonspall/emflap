@@ -47,8 +47,8 @@ def play_game():
         draw_bird(10,y)
         for i in range(0,len(pipe_heights)):
             draw_pipe(10+i*10-x,pipe_heights[i])
-        ugfx.text(30,10, "Bird %d,%d Pipe: %d,%d" % (x,y,pipe_heights[x//10],pipe_heights[x//10]+gap), ugfx.WHITE)
-        ugfx.text(30,30, "Score %d" % (score), ugfx.WHITE)
+        #ugfx.text(30,10, "Bird %d,%d Pipe: %d,%d" % (x,y,pipe_heights[x//10],pipe_heights[x//10]+gap), ugfx.WHITE)
+        ugfx.text(30,10, "Score %d" % (score), ugfx.WHITE)
     
     start = pyb.millis()
     while playing:
