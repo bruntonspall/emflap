@@ -63,9 +63,9 @@ def play_game():
         if x > 200:
             break;
 
-        draw_everything()
         elapsed = pyb.millis()-start
         if elapsed > 100:
+            draw_everything()
             x += dx
             y += dy
             dy += 1
