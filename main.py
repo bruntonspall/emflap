@@ -4,13 +4,6 @@
 ### License: MIT
 ### Appname: EMFlap
 
-##Todo:
-# * Modify main loop to remove the delay
-# * Randomise the distance between the pipes and the heights
-# * Crash into the pipes
-# * Score
-# * 
-
 import pyb
 import math
 import ugfx
