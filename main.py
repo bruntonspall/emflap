@@ -1,5 +1,5 @@
 ### Author: Michael Brunton-Spall
-### Description: Energetic Mechanical Flap
+### Description: Electromagnetic Flap (FlappyBird)
 ### Category: Games
 ### License: MIT
 ### Appname: EMFlap
