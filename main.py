@@ -5,7 +5,6 @@
 ### Appname: EMFlap
 
 import pyb
-import math
 import ugfx
 import buttons
 import database
@@ -20,10 +19,11 @@ grid_size = 8;
 bird_colour = ugfx.YELLOW
 back_colour = ugfx.BLACK
 pipe_colour = ugfx.BLUE
-edge_x = math.floor(ugfx.width()/grid_size)-2
-edge_y = math.floor(ugfx.height()/grid_size)-2
-gap=8
+gap = database.database_get("emflap.gap", 8)
+pipe_diff = database.database_get("emflap.pipe_diff", 5)
 high_score = database.database_get("emflap.highscore",0)
+jump = database.database_get("emflap.jump",-2)
+speed = database.database_get("emflap.speed",100)
 
 def play_game():
     global score
@@ -43,7 +43,7 @@ def play_game():
         pipe_heights = [13, 11, 16]
         last_height = 17
         for i in range(0,50):
-            r = randint(last_height-5,last_height+5)
+            r = randint(last_height-pipe_diff,last_height+pipe_diff)
             if r > 22: 
                 r = 22
             if r < 8:
@@ -72,7 +72,7 @@ def play_game():
     start = pyb.millis()
     while playing:
         if buttons.is_pressed("BTN_A"):
-            dy = -2
+            dy = jump
 
         if buttons.is_pressed("BTN_MENU"):
             break
@@ -83,7 +83,7 @@ def play_game():
             break
 
         elapsed = pyb.millis()-start
-        if elapsed > 100:
+        if elapsed > speed:
             draw_everything()
             if x % 10 == 0:
                 score += 1
