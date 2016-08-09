@@ -8,6 +8,7 @@ import pyb
 import math
 import ugfx
 import buttons
+import database
 
 ugfx.init()
 ugfx.enable_tear()
@@ -21,11 +22,12 @@ back_colour = ugfx.BLACK
 pipe_colour = ugfx.BLUE
 edge_x = math.floor(ugfx.width()/grid_size)-2
 edge_y = math.floor(ugfx.height()/grid_size)-2
-pipe_heights = [13,8,17,14,11,8,4,1,4,7,10,13,16,19,22,25,28]
 gap=8
+high_score = database.database_get("emflap.highscore",0)
 
 def play_game():
     global score
+    pipe_heights = []
     score = 0
     playing = True
     x = 6
@@ -33,6 +35,22 @@ def play_game():
     dx = 1
     dy = -2
 
+    def randint(lower, upper):
+        return (pyb.rng() % (upper-lower))+lower
+
+
+    def randomise_pipes():
+        pipe_heights = [13, 11, 16]
+        last_height = 17
+        for i in range(0,50):
+            r = randint(last_height-5,last_height+5)
+            if r > 22: 
+                r = 22
+            if r < 8:
+                r = 8
+            pipe_heights.append(r)
+            last_height = r
+        return pipe_heights
 
     def draw_bird(x,y):
         ugfx.area((x+1)*grid_size, (y+1)*grid_size, grid_size, grid_size, bird_colour)
@@ -50,6 +68,7 @@ def play_game():
         #ugfx.text(30,10, "Bird %d,%d Pipe: %d,%d" % (x,y,pipe_heights[x//10],pipe_heights[x//10]+gap), ugfx.WHITE)
         ugfx.text(30,10, "Score %d" % (score), ugfx.WHITE)
     
+    pipe_heights = randomise_pipes()
     start = pyb.millis()
     while playing:
         if buttons.is_pressed("BTN_A"):
@@ -60,7 +79,7 @@ def play_game():
 
         if y < 0 or y > 30:
             break
-        if x > 200:
+        if x > 500:
             break
 
         elapsed = pyb.millis()-start
@@ -84,8 +103,15 @@ while running:
     play_game()
     ugfx.text(50,100,"You lose!", ugfx.YELLOW)
     ugfx.text(50,120,"Score: %d" % (score), ugfx.YELLOW)
-    ugfx.text(50,140,"Press [A] to Play again", ugfx.YELLOW)
-    ugfx.text(50,160,"Press [B] to Quit", ugfx.YELLOW)
+    if score > high_score:
+        ugfx.text(50,140, "New High Score: %d" % (score), ugfx.YELLOW)
+        high_score = score
+        database.database_set("emflap.highscore",high_score)
+    else:
+        ugfx.text(50,140, "High Score: %d" % (high_score), ugfx.YELLOW)
+
+    ugfx.text(50,180,"Press [A] to Play again", ugfx.YELLOW)
+    ugfx.text(50,200,"Press [B] to Quit", ugfx.YELLOW)
     while True:
         if buttons.is_triggered("BTN_A"):
             break
